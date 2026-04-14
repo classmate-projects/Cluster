@@ -6,9 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "migrate:supabase": "node src/scripts/migrate-supabase.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.103.0",
+    "dotenv": "^17.4.2",
     "next": "16.2.3",
     "react": "19.2.4",
     "react-dom": "19.2.4"

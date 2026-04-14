@@ -55,10 +55,59 @@ export default function Home() {
     }
   };
 
+  const handleDeleteProject = async (projectId) => {
+    try {
+      const res = await fetch('/api/projects', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: projectId }),
+      });
+      
+      if (res.ok) {
+        setIsModalOpen(false);
+        fetchProjects();
+      }
+    } catch (error) {
+      console.error('Failed to delete project:', error);
+    }
+  };
+
+  const openAddProjectModal = () => {
+    setSelectedProject({
+      id: `project-${Date.now()}`,
+      title: '',
+      description: '',
+      thumbnail: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1000&auto=format&fit=crop',
+      tags: [],
+      version: '1.0.0',
+      url: 'https://',
+      configurable: true,
+      visible: true,
+      isNew: true
+    });
+    setIsModalOpen(true);
+  };
+
   if (!isMounted) return null;
+
+  const filteredProjects = isAdmin 
+    ? projects 
+    : projects.filter(p => p.visible !== false);
 
   return (
     <div className="flex flex-col min-h-screen bg-zinc-50 dark:bg-zinc-950 transition-colors duration-500">
+      {/* Floating Action Button for Admin */}
+      {isAdmin && (
+        <button 
+          onClick={openAddProjectModal}
+          className="fixed bottom-8 right-8 z-[60] w-16 h-16 premium-gradient text-white rounded-full shadow-2xl shadow-blue-500/40 hover:scale-110 active:scale-95 transition-all flex items-center justify-center group"
+        >
+          <svg className="w-8 h-8 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4" />
+          </svg>
+        </button>
+      )}
+
       {/* Background decoration */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl opacity-50" />
@@ -77,11 +126,11 @@ export default function Home() {
             <a href="#" className="hover:text-blue-600 transition-colors">Projects</a>
             {isAdmin && (
               <button 
-                onClick={() => router.push('/admin/configure')}
+                onClick={openAddProjectModal}
                 className="hover:text-blue-600 transition-colors text-blue-600 flex items-center gap-2"
               >
                 <div className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
-                Configure Repository
+                Add Project
               </button>
             )}
             <a href="#" className="hover:text-blue-600 transition-colors">Support</a>
@@ -148,7 +197,7 @@ export default function Home() {
             ))
           ) : (
             <>
-              {projects.map((project) => (
+              {filteredProjects.map((project) => (
                 <ProjectCard
                   key={`${project.id}-${isAdmin}`}
                   project={project}
@@ -160,19 +209,7 @@ export default function Home() {
               {/* Add Project Placeholder */}
               {isAdmin && (
                 <button 
-                  onClick={() => {
-                    setSelectedProject({
-                      id: `project-${Date.now()}`,
-                      title: 'New Project',
-                      description: 'Describe your amazing project here.',
-                      thumbnail: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1000&auto=format&fit=crop',
-                      tags: ['new'],
-                      version: '1.0.0',
-                      url: 'https://',
-                      configurable: true
-                    });
-                    setIsModalOpen(true);
-                  }}
+                  onClick={openAddProjectModal}
                   className="group relative flex flex-col items-center justify-center p-8 border-2 border-dashed border-zinc-300 dark:border-zinc-800 rounded-3xl transition-all hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-900/10 min-h-[380px] animate-in zoom-in duration-300"
                 >
                   <div className="w-16 h-16 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all text-zinc-400 shadow-inner">
@@ -195,6 +232,7 @@ export default function Home() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleSaveProject}
+        onDelete={handleDeleteProject}
       />
 
       {/* Footer */}
@@ -218,3 +256,4 @@ export default function Home() {
     </div>
   );
 }
+

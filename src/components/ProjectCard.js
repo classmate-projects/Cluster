@@ -16,9 +16,16 @@ export default function ProjectCard({ project, isAdmin, onConfigure }) {
         />
         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-300" />
         
-        {/* Version Badge */}
-        <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md text-white text-xs font-medium px-2.5 py-1 rounded-full border border-white/20">
-          v{version}
+        {/* Visibility/Version Badges */}
+        <div className="absolute top-4 right-4 flex gap-2">
+          {isAdmin && project.visible === false && (
+            <div className="bg-red-500/80 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border border-white/20">
+              Hidden
+            </div>
+          )}
+          <div className="bg-black/60 backdrop-blur-md text-white text-xs font-medium px-2.5 py-1 rounded-full border border-white/20">
+            v{version}
+          </div>
         </div>
       </div>
 

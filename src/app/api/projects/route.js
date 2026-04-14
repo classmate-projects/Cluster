@@ -33,3 +33,19 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Failed to update projects data' }, { status: 500 });
   }
 }
+
+export async function DELETE(request) {
+  try {
+    const { id } = await request.json();
+    const jsonData = fs.readFileSync(dataFilePath, 'utf8');
+    let projects = JSON.parse(jsonData);
+
+    projects = projects.filter((p) => p.id !== id);
+
+    fs.writeFileSync(dataFilePath, JSON.stringify(projects, null, 2));
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to delete project' }, { status: 500 });
+  }
+}
+

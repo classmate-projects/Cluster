@@ -3,11 +3,29 @@
 import { useState, useEffect } from 'react';
 
 export default function ConfigureModal({ project, isOpen, onClose, onSave }) {
-  const [formData, setFormData] = useState({ ...project });
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    version: '',
+    url: '',
+    tags: [],
+    thumbnail: '',
+    configurable: false,
+    ...project
+  });
 
   useEffect(() => {
     if (project) {
-      setFormData({ ...project });
+      setFormData({
+        title: '',
+        description: '',
+        version: '',
+        url: '',
+        tags: [],
+        thumbnail: '',
+        configurable: false,
+        ...project
+      });
     }
   }, [project]);
 
@@ -63,7 +81,7 @@ export default function ConfigureModal({ project, isOpen, onClose, onSave }) {
                 <input
                   type="text"
                   name="title"
-                  value={formData.title}
+                  value={formData.title ?? ''}
                   onChange={handleChange}
                   className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-semibold"
                   required
@@ -74,7 +92,7 @@ export default function ConfigureModal({ project, isOpen, onClose, onSave }) {
                 <input
                   type="text"
                   name="version"
-                  value={formData.version}
+                  value={formData.version ?? ''}
                   onChange={handleChange}
                   className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-semibold"
                   required
@@ -86,7 +104,7 @@ export default function ConfigureModal({ project, isOpen, onClose, onSave }) {
               <label className="text-xs font-bold uppercase text-zinc-500 tracking-widest pl-1">Description</label>
               <textarea
                 name="description"
-                value={formData.description}
+                value={formData.description ?? ''}
                 onChange={handleChange}
                 rows="3"
                 className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-semibold"
@@ -100,7 +118,7 @@ export default function ConfigureModal({ project, isOpen, onClose, onSave }) {
                 <input
                   type="url"
                   name="url"
-                  value={formData.url}
+                  value={formData.url ?? ''}
                   onChange={handleChange}
                   className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-semibold text-sm"
                   required
@@ -110,7 +128,7 @@ export default function ConfigureModal({ project, isOpen, onClose, onSave }) {
                 <label className="text-xs font-bold uppercase text-zinc-500 tracking-widest pl-1">Tags (comma separated)</label>
                 <input
                   type="text"
-                  value={formData.tags.join(', ')}
+                  value={(formData.tags ?? []).join(', ')}
                   onChange={handleTagsChange}
                   className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-semibold text-sm"
                 />
@@ -122,7 +140,7 @@ export default function ConfigureModal({ project, isOpen, onClose, onSave }) {
               <input
                 type="text"
                 name="thumbnail"
-                value={formData.thumbnail}
+                value={formData.thumbnail ?? ''}
                 onChange={handleChange}
                 className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-semibold text-sm"
               />
